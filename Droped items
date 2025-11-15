@@ -1,0 +1,75 @@
+-- // ========= CONFIG (You can edit with getgenv) ========= \\
+
+getgenv().HighlightEnabled = true         -- true = ON, false = OFF
+getgenv().HighlightColor = Color3.fromRGB(255, 255, 0) -- Highlight color
+getgenv().ShowItemName = true             -- Shows name above item
+
+-- // ======================================================= \\
+
+
+local folder = workspace:WaitForChild("DroppedItems")
+
+-- Apply highlight + name
+local function applyEffects(item)
+
+    -- Remove old effects
+    if item:FindFirstChild("HighlightItem") then
+        item.HighlightItem:Destroy()
+    end
+    if item:FindFirstChild("ItemNameBillboard") then
+        item.ItemNameBillboard:Destroy()
+    end
+
+    if getgenv().HighlightEnabled == false then
+        return
+    end
+
+    -- Highlight
+    local hl = Instance.new("Highlight")
+    hl.Name = "HighlightItem"
+    hl.FillColor = getgenv().HighlightColor
+    hl.OutlineColor = getgenv().HighlightColor
+    hl.Parent = item
+
+    -- Item name
+    if getgenv().ShowItemName then
+        local bb = Instance.new("BillboardGui")
+        bb.Name = "ItemNameBillboard"
+        bb.Size = UDim2.new(0, 100, 0, 20)
+        bb.AlwaysOnTop = true
+        bb.Adornee = item:FindFirstChildWhichIsA("BasePart")
+        bb.Parent = item
+
+        local text = Instance.new("TextLabel")
+        text.Size = UDim2.new(1, 0, 1, 0)
+        text.BackgroundTransparency = 1
+        text.Text = item.Name
+        text.TextColor3 = Color3.fromRGB(255, 255, 255)
+        text.TextStrokeTransparency = 0
+        text.Font = Enum.Font.Code
+        text.TextScaled = true
+        text.Parent = bb
+    end
+end
+
+
+-- Highlight all existing items
+for _, item in ipairs(folder:GetChildren()) do
+    applyEffects(item)
+end
+
+-- Highlight new items
+folder.ChildAdded:Connect(function(item)
+    task.wait(0.1)
+    applyEffects(item)
+end)
+
+-- Auto-update when you change getgenv settings
+task.spawn(function()
+    while true do
+        task.wait(1)
+        for _, item in ipairs(folder:GetChildren()) do
+            applyEffects(item)
+        end
+    end
+end)
