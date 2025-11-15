@@ -1,8 +1,8 @@
 -- // ========= CONFIG (You can edit with getgenv) ========= \\
 
-getgenv().HighlightEnabled = true          -- true = ON, false = OFF
+getgenv().HighlightEnabled = false          -- true = ON, false = OFF
 getgenv().HighlightColor = Color3.fromRGB(255, 255, 0) -- Highlight color (Yellow)
-getgenv().ShowItemName = true             -- Shows name above item
+getgenv().ShowItemName = false            -- Shows name above item
 
 -- // ======================================================= \\
 
