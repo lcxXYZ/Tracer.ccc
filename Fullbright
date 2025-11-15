@@ -1,0 +1,24 @@
+local L=game:GetService("Lighting")
+local G=getgenv()
+if not G.FB_O then G.FB_O={A=L.Ambient,O=L.OutdoorAmbient,B=L.Brightness,D=L.EnvironmentDiffuseScale,S=L.EnvironmentSpecularScale,V=true} end
+if not G.FullBrightEnabled then G.FullBrightEnabled=true end
+if not G.FullBrightColor then G.FullBrightColor=Color3.new(1,1,1) end
+if not G.Brightnesslvl then G.Brightnesslvl=5 end
+local O=G.FB_O
+local function U()
+    if G.FullBrightEnabled then
+        L.Ambient=G.FullBrightColor
+        L.OutdoorAmbient=G.FullBrightColor
+        L.Brightness=G.Brightnesslvl
+        L.EnvironmentDiffuseScale=1
+        L.EnvironmentSpecularScale=1
+    elseif O.V then
+        L.Ambient=O.A
+        L.OutdoorAmbient=O.O
+        L.Brightness=O.B
+        L.EnvironmentDiffuseScale=O.D
+        L.EnvironmentSpecularScale=O.S
+    end
+end
+G.UpdateFB=U
+U()
