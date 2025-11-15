@@ -1,7 +1,7 @@
 -- // ========= CONFIG (You can edit with getgenv) ========= \\
 
-getgenv().HighlightEnabled = true         -- true = ON, false = OFF
-getgenv().HighlightColor = Color3.fromRGB(255, 255, 0) -- Highlight color
+getgenv().HighlightEnabled = true          -- true = ON, false = OFF
+getgenv().HighlightColor = Color3.fromRGB(255, 255, 0) -- Highlight color (Yellow)
 getgenv().ShowItemName = true             -- Shows name above item
 
 -- // ======================================================= \\
@@ -33,22 +33,25 @@ local function applyEffects(item)
 
     -- Item name
     if getgenv().ShowItemName then
-        local bb = Instance.new("BillboardGui")
-        bb.Name = "ItemNameBillboard"
-        bb.Size = UDim2.new(0, 100, 0, 20)
-        bb.AlwaysOnTop = true
-        bb.Adornee = item:FindFirstChildWhichIsA("BasePart")
-        bb.Parent = item
-
-        local text = Instance.new("TextLabel")
-        text.Size = UDim2.new(1, 0, 1, 0)
-        text.BackgroundTransparency = 1
-        text.Text = item.Name
-        text.TextColor3 = Color3.fromRGB(255, 255, 255)
-        text.TextStrokeTransparency = 0
-        text.Font = Enum.Font.Code
-        text.TextScaled = true
-        text.Parent = bb
+        local basePart = item:FindFirstChildWhichIsA("BasePart")
+        if basePart then
+            local bb = Instance.new("BillboardGui")
+            bb.Name = "ItemNameBillboard"
+            bb.Size = UDim2.new(0, 150, 0, 20)
+            bb.AlwaysOnTop = true
+            bb.Adornee = basePart
+            bb.Parent = item
+    
+            local text = Instance.new("TextLabel")
+            text.Size = UDim2.new(1, 0, 1, 0)
+            text.BackgroundTransparency = 1
+            text.Text = item.Name
+            text.TextColor3 = Color3.fromRGB(255, 255, 255)
+            text.TextStrokeTransparency = 0
+            text.Font = Enum.Font.Code
+            text.TextScaled = true
+            text.Parent = bb
+        end
     end
 end
 
@@ -60,11 +63,12 @@ end
 
 -- Highlight new items
 folder.ChildAdded:Connect(function(item)
+    -- Add a small wait in case the item hasn't fully loaded its parts yet
     task.wait(0.1)
     applyEffects(item)
 end)
 
--- Auto-update when you change getgenv settings
+-- Auto-update (runs every second to apply changes if you toggle the UI settings)
 task.spawn(function()
     while true do
         task.wait(1)
